@@ -77,7 +77,7 @@ namespace MjpegProxyServer
 			stream.NewFrame += Stream_NewFrame;//new NewFrameEventHandler(video_NewFrame);
 			stream.VideoSourceError += Stream_VideoSourceError;
 			// start the video source
-			stream.Start();            
+			stream.Start();
 			Console.WriteLine("Started Mjpeg Stream connection...........");
 			//var sr = new ServerRequest();
 			//string s = Newtonsoft.Json.JsonConvert.SerializeObject(sr);
@@ -89,7 +89,9 @@ namespace MjpegProxyServer
 		public void stop()
 		{
 			stream.Stop();
-		}
+            watch.Reset();
+            watch.Stop();
+        }
         public bool isRunning()
         {
             if (stream == null) return false;
@@ -127,7 +129,7 @@ namespace MjpegProxyServer
             {
                 this.streamFPS = Math.Round(fpsCount/(watch.Elapsed.TotalMilliseconds/1000),2);
                 fpsCount = 0;
-                watch.Restart();                
+                watch.Restart();
             }
             imageQueue.Enqueue(base64ConvertedString);
 			//Console.Write("\t("+eventArgs.Frame.Width + "x" + eventArgs.Frame.Height + "x" + eventArgs.Frame.PixelFormat.ToString()+")"+imageQueue.Count+"\t ");
