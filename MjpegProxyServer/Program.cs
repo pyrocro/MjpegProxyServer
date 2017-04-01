@@ -47,7 +47,7 @@ namespace MjpegProxyServer
 			//server.AddWebSocketService<MjpegWebSocketBehavior>("/api",() => new MjpegWebSocketBehavior("http://ymc.noip.me/turtlecam"));//"http://ymc.noip.me:8081"));
 			//server.AddWebSocketService<MjpegWebSocketServer>("/api", () => new MjpegWebSocketServer("http://206.176.34.55/mjpg/video.mjpg?COUNTER"));
 
-			Console.WriteLine("Starting Web Socket server");
+			Console.WriteLine("Starting Web Socket server"); 
 			server.Start();
 			Console.WriteLine("Web Socket server Started...........");
 
