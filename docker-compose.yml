@@ -1,0 +1,8 @@
+version: '2.1'
+
+services:
+  mjpegproxyserver:
+    image: mjpegproxyserver
+    build:
+      context: .\MjpegProxyServer
+      dockerfile: Dockerfile
