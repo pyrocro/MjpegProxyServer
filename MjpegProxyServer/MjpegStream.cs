@@ -9,9 +9,12 @@ using System.Collections.Generic;
 
 namespace MjpegProxyServer
 {
-	public class MjpegStream
-	{
+    public class MjpegStream
+    {
         public Dictionary<string, MjpegWebSocketBehavior> connectionList = new Dictionary<string, MjpegWebSocketBehavior>();
+        bool running = false;
+        public bool RUNNING { get { return running; } }
+        
         public bool hasClients()
         {
             if (connectionList.Count <= 0) return false;
@@ -43,8 +46,11 @@ namespace MjpegProxyServer
 		public MjpegStream(string url)
 		{
 			stream = new MJPEGStream(url);
-            watch.Start();            
-		}
+            watch.Start();
+            // set event handlers
+            stream.NewFrame += Stream_NewFrame;//new NewFrameEventHandler(video_NewFrame);
+            stream.VideoSourceError += Stream_VideoSourceError;
+        }
 
 		/// <summary>
 		/// Gets the queue count.
@@ -63,7 +69,12 @@ namespace MjpegProxyServer
 			get
 			{
 				if (imageQueue.Count == 0) return "";
-				return imageQueue.Peek().ToString();//imageQueue.Dequeue().ToString();
+                string peek = null;
+                lock (imageQueue)
+                {
+                    peek = imageQueue.Peek().ToString();
+                }
+                return peek;//imageQueue.Dequeue().ToString();
 			}
 		}
 
@@ -71,26 +82,39 @@ namespace MjpegProxyServer
 		/// Start this instance.
 		/// </summary>
 		public void start()
-		{
+		{            
 			
-			// set event handlers
-			stream.NewFrame += Stream_NewFrame;//new NewFrameEventHandler(video_NewFrame);
-			stream.VideoSourceError += Stream_VideoSourceError;
 			// start the video source
 			stream.Start();
 			Console.WriteLine("Started Mjpeg Stream connection...........");
-			//var sr = new ServerRequest();
-			//string s = Newtonsoft.Json.JsonConvert.SerializeObject(sr);
-		}
+            //var sr = new ServerRequest();
+            //string s = Newtonsoft.Json.JsonConvert.SerializeObject(sr);
+            if (watch != null) watch.Stop();
+            fpsCount = 0;
+            streamFPS = 0;
+            watch = new Stopwatch();
+            watch.Start();
+            running = true;
+
+        }
 
 		/// <summary>
 		/// Stop this instance.
 		/// </summary>
 		public void stop()
 		{
-			stream.Stop();
-            watch.Reset();
-            watch.Stop();
+            if (stream != null)
+            {
+                stream.SignalToStop();
+                stream.WaitForStop();
+                //stream.Stop();
+            }
+            if (watch != null)
+            {
+                watch.Reset();
+                watch.Stop();
+            }
+            running = false;
         }
         public bool isRunning()
         {
@@ -122,13 +146,17 @@ namespace MjpegProxyServer
 
 			if (imageQueue.Count > MAX_IMAGES_IN_QUEUE)
 			{
-				imageQueue.Dequeue(); //remove 1st/oldest frame from the queue
+                lock (imageQueue)
+                {
+                    imageQueue.Dequeue(); //remove 1st/oldest frame from the queue
+                }
 			}
             fpsCount++;
             if (watch.Elapsed.TotalMilliseconds >= 1000)
             {
                 this.streamFPS = Math.Round(fpsCount/(watch.Elapsed.TotalMilliseconds/1000),2);
                 fpsCount = 0;
+                watch.Reset();
                 watch.Restart();
             }
             imageQueue.Enqueue(base64ConvertedString);
@@ -191,7 +219,6 @@ namespace MjpegProxyServer
 			return null;
 		}
 
-
-
-	}
+       
+    }
 }

@@ -19,7 +19,7 @@ namespace MjpegProxyServer
         }
         public MjpegStream getMjpegStream(string name, MjpegWebSocketBehavior msb)
         {
-            MjpegStream stream = null;            
+            MjpegStream stream = null;
             stream = streamList[name];
             stream.connectionList[msb.ID] =  msb;
 

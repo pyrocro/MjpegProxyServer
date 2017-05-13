@@ -26,26 +26,32 @@ namespace MjpegProxyServer
         }
         protected override void OnMessage(WebSocketSharp.MessageEventArgs e)
 		{
-			/*Console.WriteLine("**********");
+            /*Console.WriteLine("**********");
 			if (e.IsText) Console.WriteLine("IS TEXT"); else Console.WriteLine("IS Binary");
 			Console.WriteLine("request = " + e.RawData.Length);
-			Console.WriteLine("**********");*/
+			Console.WriteLine("**********");
+            Console.WriteLine("data>" + e.Data + "<");
+            Console.WriteLine("rawdata>"+e.RawData+"<");*/
+
 			var request = JsonConvert.DeserializeObject<ServerRequest>(e.Data);
             string str = null;
 			switch (request.command)
 			{
 				case "ready":
 
-                    MjpegStream stream = mjpegStreamManager.getMjpegStream(request.clientData["stream_name"].ToString(),this);
-                    if (stream.isRunning() == false) stream.start(); // if the stream is not running start it
-					request.uniqueId = this.ID;
-					request.serverData.Add("image", "data:image/jpeg;base64,"+stream.currentImage);
+                    MjpegStream stream = mjpegStreamManager.getMjpegStream(request.clientData["stream_name"].ToString(), this);
+                    
+                    if (stream.RUNNING == false)
+                        stream.start(); // if the stream is not running start it                    
+                    request.uniqueId = this.ID;
+                    request.serverData.Add("image", "data:image/jpeg;base64," + stream.currentImage);
                     request.serverData.Add("ServerStreamFPS", stream.streamFPS);
                     request.serverData.Add("ServerBufferedFrames", stream.QueueCount);
 
                     str = JsonConvert.SerializeObject(request);
                     this.Send(str);
                     //this.SendAsync(s,null);
+                    
                     break;
                 case "get_mjpeg_stream":
                     

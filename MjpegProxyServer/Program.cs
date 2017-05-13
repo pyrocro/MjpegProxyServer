@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using WebSocketSharp.Server;
 
 namespace MjpegProxyServer
@@ -51,8 +52,21 @@ namespace MjpegProxyServer
 			server.Start();
 			Console.WriteLine("Web Socket server Started...........");
 
-			Console.ReadLine();
-			Console.WriteLine("closing server");
+
+            //Console.ReadLine();
+            //Thread.Sleep(50000000);
+            do
+            {
+                Console.WriteLine("is listening" + server.IsListening);
+                Thread.Sleep(1000);
+                /*  while (!Console.KeyAvailable) //Continue if pressing a Key press is not available in the input stream
+                    {
+                        //Do Something While Paused
+                    } 
+                */
+
+            } while (Console.ReadKey(true).Key != ConsoleKey.Escape); //Resume if Escape was pressed
+            Console.WriteLine("closing server...");
 			server.Stop();
 		}
 
