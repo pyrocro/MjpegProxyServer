@@ -8,6 +8,7 @@ services:
 build:
   stage: build
   script:
+    - echo %CI_PROJECT_NAME%
     - echo %CI_REGISTRY_IMAGE%:%IMAGE_TAG%
     - echo %CI_COMMIT_REF_NAME%
     - echo %CI_COMMIT_TAG%
