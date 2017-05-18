@@ -27,7 +27,7 @@ namespace MjpegProxyServer
         /// <summary>
         /// The max images in queue.
         /// </summary>
-        public const int MAX_IMAGES_IN_QUEUE = 60;
+        public const int MAX_IMAGES_IN_QUEUE = 2;
 
 		/// <summary>
 		/// The image queue.
@@ -137,14 +137,15 @@ namespace MjpegProxyServer
 		/// </summary>
 		/// <param name="sender">Sender.</param>
 		/// <param name="eventArgs">Event arguments.</param>
-		private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs)
+		private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs) 
 		{   
-			Console.Write("\t(" + imageQueue.Count+"-r"+this.stream.BytesReceived+") ");
+			//Console.Write("\t(" + imageQueue.Count+"-r"+this.stream.BytesReceived+") ");
+            
 
+            string base64ConvertedString = ImageToBase64(eventArgs.Frame, System.Drawing.Imaging.ImageFormat.Jpeg);
+            eventArgs.Frame.Dispose();
 
-			string base64ConvertedString = ImageToBase64(eventArgs.Frame, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-			if (imageQueue.Count > MAX_IMAGES_IN_QUEUE)
+            if (imageQueue.Count > MAX_IMAGES_IN_QUEUE)
 			{
                 lock (imageQueue)
                 {
@@ -189,10 +190,10 @@ namespace MjpegProxyServer
 
 				EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
 				myEncoderParameters.Param[0] = myEncoderParameter;
-				/******************************************************************************************************/
-
-				// Convert Image to byte[]
-				image.Save(ms, jpgEncoder,myEncoderParameters);
+                /******************************************************************************************************/
+                
+                // Convert Image to byte[]
+                image.Save(ms, jpgEncoder,myEncoderParameters);
 				byte[] imageBytes = ms.ToArray();
 
 				// Convert byte[] to Base64 String

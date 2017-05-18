@@ -47,6 +47,7 @@ namespace MjpegProxyServer
                     request.serverData.Add("image", "data:image/jpeg;base64," + stream.currentImage);
                     request.serverData.Add("ServerStreamFPS", stream.streamFPS);
                     request.serverData.Add("ServerBufferedFrames", stream.QueueCount);
+                    
 
                     str = JsonConvert.SerializeObject(request);
                     this.Send(str);

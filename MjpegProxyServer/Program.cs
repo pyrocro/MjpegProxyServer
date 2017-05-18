@@ -57,8 +57,8 @@ namespace MjpegProxyServer
             //Thread.Sleep(50000000);
             do
             {
-                Console.WriteLine("is listening" + server.IsListening);
-                Thread.Sleep(1000);
+                Console.WriteLine(""+DateTime.Now.ToShortTimeString()+"()is listening" + server.IsListening);
+                Thread.Sleep(5000);
                 /*  while (!Console.KeyAvailable) //Continue if pressing a Key press is not available in the input stream
                     {
                         //Do Something While Paused

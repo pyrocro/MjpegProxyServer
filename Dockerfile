@@ -11,7 +11,8 @@ ADD ["./MjpegProxyServer/bin/Debug/*","/usr/src/app/build/debug/"]
 RUN ls /usr/src/app/build/debug
 ADD ["./MjpegProxyServer/bin/Release/*","/usr/src/app/build/release/"]
 RUN ls /usr/src/app/build/release
-CMD [ "mono",  "/usr/src/app/build/debug/MjpegProxyServer.exe" ]
+#CMD [ "mono",  "/usr/src/app/build/debug/MjpegProxyServer.exe" ]
+CMD [ "mono",  "/usr/src/app/build/release/MjpegProxyServer.exe" ]
 EXPOSE 6021
 #RUN apt-get update && apt-get install mono-4.0-service -y
 #CMD [ "mono-service",  "/usr/src/app/build/MjpegProxyServer.exe" , "--no-daemon" ]
