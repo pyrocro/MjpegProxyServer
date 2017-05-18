@@ -9,7 +9,8 @@ build:
   stage: build
   script:
     - echo %CI_PROJECT_NAME%
-    - echo %CI_REGISTRY_IMAGE%:%IMAGE_TAG%
+    - echo %CI_REGISTRY_IMAGE%
+    - echo :%IMAGE_TAG%
     - echo %CI_COMMIT_REF_NAME%
     - echo %CI_COMMIT_TAG%
     - set IMAGE_TAG=%(echo -en %CI_COMMIT_REF_NAME% | tr -c '[:alnum:]_.-' '-')%
