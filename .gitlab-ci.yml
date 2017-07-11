@@ -7,6 +7,9 @@ services:
 
 build:
   stage: build
+  tags:
+    - windows
+    - docker
   script:
     - echo %CI_PROJECT_NAME%
     - echo %CI_REGISTRY_IMAGE%
