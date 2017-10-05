@@ -6,10 +6,10 @@ RUN ls /usr/src/app/build/
 RUN ls /usr/src/app/build/MjpegProxyServer/
 RUN nuget restore MjpegProxyServer.sln
 
-RUN xbuild /p:Configuration=Debug MjpegProxyServer.sln
+RUN msbuild MjpegProxyServer.sln /p:Configuration=Debug
 RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
 
-RUN xbuild /p:Configuration=Release MjpegProxyServer.sln
+RUN msbuild MjpegProxyServer.sln /p:Configuration=Release
 RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
 
 CMD [ "sh",  "-c", "mono /usr/src/app/build/MjpegProxyServer/bin/Debug/MjpegProxyServer.exe" ]
