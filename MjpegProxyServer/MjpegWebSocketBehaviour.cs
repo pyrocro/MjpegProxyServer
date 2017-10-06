@@ -44,7 +44,8 @@ namespace MjpegProxyServer
                     if (stream.RUNNING == false)
                         stream.start(); // if the stream is not running start it                    
                     request.uniqueId = this.ID;
-                    request.serverData.Add("image", "data:image/jpeg;base64," + stream.currentImage);
+                    request.serverData.Add("image", "data:image/jpeg;base64," + stream.currentImage.ImageBase64String);
+                    //request.serverData.Add("frames", "data:image/jpeg;base64," + stream.currentImage);
                     request.serverData.Add("ServerStreamFPS", stream.streamFPS);
                     request.serverData.Add("ServerBufferedFrames", stream.QueueCount);
                     

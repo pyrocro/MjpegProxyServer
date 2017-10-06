@@ -13,7 +13,7 @@ namespace MjpegProxyServer
     {
         public Dictionary<string, MjpegWebSocketBehavior> connectionList = new Dictionary<string, MjpegWebSocketBehavior>();
         bool running = false;
-        public bool RUNNING { get { return running; } }
+        public bool RUNNING { get { return running; } }        
         
         public bool hasClients()
         {
@@ -32,7 +32,7 @@ namespace MjpegProxyServer
 		/// <summary>
 		/// The image queue.
 		/// </summary>
-		Queue imageQueue = new Queue();
+		Queue<FrameData> imageQueue = new Queue<FrameData>();
 
 		/// <summary>
 		/// The stream.
@@ -65,14 +65,14 @@ namespace MjpegProxyServer
 		/// Gets the current image.
 		/// </summary>
 		/// <value>The current image.</value>
-		public string currentImage{
+		public FrameData currentImage{
 			get
 			{
-				if (imageQueue.Count == 0) return "";
-                string peek = null;
+				if (imageQueue.Count == 0) return new FrameData(new Bitmap(640,480));
+                FrameData peek = null;
                 lock (imageQueue)
                 {
-                    peek = imageQueue.Peek().ToString();
+                    peek = imageQueue.Peek();
                 }
                 return peek;//imageQueue.Dequeue().ToString();
 			}
@@ -138,11 +138,11 @@ namespace MjpegProxyServer
 		/// <param name="sender">Sender.</param>
 		/// <param name="eventArgs">Event arguments.</param>
 		private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs) 
-		{   
-			//Console.Write("\t(" + imageQueue.Count+"-r"+this.stream.BytesReceived+") ");
-            
+		{
+            //Console.Write("\t(" + imageQueue.Count+"-r"+this.stream.BytesReceived+") ");
 
-            string base64ConvertedString = ImageToBase64(eventArgs.Frame, System.Drawing.Imaging.ImageFormat.Jpeg);
+            FrameData frameData = new FrameData(eventArgs.Frame);
+            //string base64ConvertedString = ImageToBase64(eventArgs.Frame, System.Drawing.Imaging.ImageFormat.Jpeg);
             eventArgs.Frame.Dispose();
 
             if (imageQueue.Count > MAX_IMAGES_IN_QUEUE)
@@ -160,65 +160,11 @@ namespace MjpegProxyServer
                 watch.Reset();
                 watch.Restart();
             }
-            imageQueue.Enqueue(base64ConvertedString);
+            imageQueue.Enqueue(frameData);
 			//Console.Write("\t("+eventArgs.Frame.Width + "x" + eventArgs.Frame.Height + "x" + eventArgs.Frame.PixelFormat.ToString()+")"+imageQueue.Count+"\t ");
 			//Console.WriteLine();
 		}
 
-		/// <summary>
-		/// Images to base64.
-		/// </summary>
-		/// <returns>The to base64.</returns>
-		/// <param name="image">Image.</param>
-		/// <param name="format">Format.</param>
-		public string ImageToBase64(Image image, System.Drawing.Imaging.ImageFormat format)
-		{
-			using (MemoryStream ms = new MemoryStream())
-			{
-				ImageCodecInfo jpgEncoder = GetEncoder(format);
-
-				// Create an Encoder object based on the GUID
-				// for the Quality parameter category.
-				System.Drawing.Imaging.Encoder myEncoder =
-					System.Drawing.Imaging.Encoder.Quality;
-
-				// Create an EncoderParameters object.
-				// An EncoderParameters object has an array of EncoderParameter
-				// objects. In this case, there is only one
-				// EncoderParameter object in the array.
-				EncoderParameters myEncoderParameters = new EncoderParameters(1);
-
-				EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
-				myEncoderParameters.Param[0] = myEncoderParameter;
-                /******************************************************************************************************/
-                
-                // Convert Image to byte[]
-                image.Save(ms, jpgEncoder,myEncoderParameters);
-				byte[] imageBytes = ms.ToArray();
-
-				// Convert byte[] to Base64 String
-				string base64String = Convert.ToBase64String(imageBytes);
-				return base64String;
-			}
-		}
-
-		/// <summary>
-		/// Gets the encoder.
-		/// </summary>
-		/// <returns>The encoder.</returns>
-		/// <param name="format">Format.</param>
-		private ImageCodecInfo GetEncoder(ImageFormat format)
-		{
-			ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
-			foreach (ImageCodecInfo codec in codecs)
-			{
-				if (codec.FormatID == format.Guid)
-				{
-					return codec;
-				}
-			}
-			return null;
-		}
 
        
     }
