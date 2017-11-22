@@ -9,10 +9,15 @@ RUN nuget restore MjpegProxyServer.sln
 RUN msbuild MjpegProxyServer.sln /p:Configuration=Debug
 RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
 
-RUN msbuild MjpegProxyServer.sln /p:Configuration=Release
-RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
+#RUN msbuild MjpegProxyServer.sln /p:Configuration=Release
+#RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
 
-CMD [ "sh",  "-c", "mono /usr/src/app/build/MjpegProxyServer/bin/Debug/MjpegProxyServer.exe" ]
+FROM scratch
+WORKDIR /app
+RUN cp -r /usr/src/app/build/MjpegProxyServer/bin/ ./
+
+#CMD [ "sh",  "-c", "mono /usr/src/app/build/MjpegProxyServer/bin/Debug/MjpegProxyServer.exe" ]
+CMD [ "sh",  "-c", "mono /app/MjpegProxyServer.exe" ]
 
 EXPOSE 6021
 
