@@ -1,4 +1,4 @@
-FROM mono:latest
+FROM mono:latest as builder
 #RUN mkdir -p release 
 WORKDIR /usr/src/app/build/
 COPY ["./","./"]
@@ -13,8 +13,7 @@ RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
 #RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
 
 FROM scratch
-WORKDIR /app
-RUN cp -a /usr/src/app/build/MjpegProxyServer/bin/ ./
+COPY --from=builder /usr/src/app/build/MjpegProxyServer/bin/ ./
 
 #CMD [ "sh",  "-c", "mono /usr/src/app/build/MjpegProxyServer/bin/Debug/MjpegProxyServer.exe" ]
 CMD [ "sh",  "-c", "mono /app/MjpegProxyServer.exe" ]
