@@ -14,7 +14,7 @@ RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
 
 FROM scratch
 WORKDIR /app
-RUN cp -r /usr/src/app/build/MjpegProxyServer/bin/ ./
+RUN cp -a /usr/src/app/build/MjpegProxyServer/bin/ ./
 
 #CMD [ "sh",  "-c", "mono /usr/src/app/build/MjpegProxyServer/bin/Debug/MjpegProxyServer.exe" ]
 CMD [ "sh",  "-c", "mono /app/MjpegProxyServer.exe" ]
