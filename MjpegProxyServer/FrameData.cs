@@ -63,7 +63,7 @@ namespace MjpegProxyServer
                 // EncoderParameter object in the array.
                 EncoderParameters myEncoderParameters = new EncoderParameters(1);
 
-                EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
+                EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 25L);
                 myEncoderParameters.Param[0] = myEncoderParameter;
                 /******************************************************************************************************/
 
