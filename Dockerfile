@@ -1,4 +1,4 @@
-FROM mono:5.2 as builder
+FROM mono:latest as builder
 #RUN mkdir -p release 
 WORKDIR /usr/src/app/build/
 ENV MJPEG_URL=http://ymc.redirectme.com/turtlecam
@@ -17,7 +17,7 @@ FROM scratch
 COPY --from=builder /usr/src/app/build/MjpegProxyServer/bin/ ./
 
 #CMD [ "sh",  "-c", "mono /usr/src/app/build/MjpegProxyServer/bin/Debug/MjpegProxyServer.exe" ]
-CMD [ "sh",  "-c", "mono /app/MjpegProxyServer.exe" ]
+CMD ["mono", "/app/MjpegProxyServer.exe" ]
 
 EXPOSE 6021
 
