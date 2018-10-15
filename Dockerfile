@@ -12,7 +12,7 @@ RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
 #RUN msbuild MjpegProxyServer.sln /p:Configuration=Release
 #RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
 
-FROM scratch
+#FROM scratch
 ENV MJPEG_URL=http://ymc.redirectme.com/turtlecam
 WORKDIR /app/
 COPY --from=builder /usr/src/app/build/MjpegProxyServer/bin/ ./
