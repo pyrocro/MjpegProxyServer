@@ -64,6 +64,7 @@ namespace MjpegProxyServer
             do
             {
                 Console.WriteLine(""+DateTime.Now.ToShortTimeString()+"()is listening" + server.IsListening);
+                Console.WriteLine("mjpeg_url url: "+mjpeg_url);
                 Thread.Sleep(5000);
                 /*  while (!Console.KeyAvailable) //Continue if pressing a Key press is not available in the input stream
                     {
