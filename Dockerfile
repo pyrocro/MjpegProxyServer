@@ -17,7 +17,7 @@ FROM scratch
 COPY --from=builder /usr/src/app/build/MjpegProxyServer/bin/ ./
 
 #CMD [ "sh",  "-c", "mono /usr/src/app/build/MjpegProxyServer/bin/Debug/MjpegProxyServer.exe" ]
-CMD ["mono", "/app/MjpegProxyServer.exe" ]
+CMD [ "mono","/app/MjpegProxyServer.exe" ]
 
 EXPOSE 6021
 
