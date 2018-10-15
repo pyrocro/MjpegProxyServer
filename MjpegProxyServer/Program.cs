@@ -42,6 +42,7 @@ namespace MjpegProxyServer
             WebSocketServer server = new WebSocketServer(6021);
             MjpegStreamManager streamManager = new MjpegStreamManager();
             var mjpeg_url = Environment.GetEnvironmentVariable("MJPEG_URL");
+            Console.WriteLine("mjpeg_url url: "+mjpeg_url);
             if (string.IsNullOrEmpty(mjpeg_url)){
                 mjpeg_url = "http://ymc.redirectme.com/turtlecam"
             } 
@@ -51,7 +52,7 @@ namespace MjpegProxyServer
 
 			//server.AddWebSocketService<MjpegWebSocketBehavior>("/api",() => new MjpegWebSocketBehavior("http://ymc.noip.me/turtlecam"));//"http://ymc.noip.me:8081"));
 			//server.AddWebSocketService<MjpegWebSocketServer>("/api", () => new MjpegWebSocketServer("http://206.176.34.55/mjpg/video.mjpg?COUNTER"));
-			Console.WriteLine("mjpeg_url url: "+mjpeg_url);
+			
 
 			Console.WriteLine("Starting Web Socket server"); 
 			server.Start();
