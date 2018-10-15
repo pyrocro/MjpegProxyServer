@@ -1,4 +1,4 @@
-FROM mono:latest as builder
+FROM mono:5.2 as builder
 #RUN mkdir -p release 
 WORKDIR /usr/src/app/build/
 ENV MJPEG_URL=http://ymc.redirectme.com/turtlecam
