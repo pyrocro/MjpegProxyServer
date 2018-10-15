@@ -17,10 +17,11 @@ FROM mono:latest
 ENV MJPEG_URL=http://ymc.redirectme.com/turtlecam
 WORKDIR /app/
 COPY --from=builder /usr/src/app/build/MjpegProxyServer/bin/ ./
+RUN pwd
 RUN ls ./
 
 #CMD [ "sh",  "-c", "mono /usr/src/app/build/MjpegProxyServer/bin/Debug/MjpegProxyServer.exe" ]
-CMD [ "mono","/app/MjpegProxyServer.exe" ]
+CMD [ "mono","/app/Debug/MjpegProxyServer.exe" ]
 
 EXPOSE 6021
 
