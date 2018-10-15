@@ -13,6 +13,7 @@ RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
 #RUN ls /usr/src/app/build/MjpegProxyServer/bin/Debug
 
 #FROM scratch
+FROM mono:latest
 ENV MJPEG_URL=http://ymc.redirectme.com/turtlecam
 WORKDIR /app/
 COPY --from=builder /usr/src/app/build/MjpegProxyServer/bin/ ./
