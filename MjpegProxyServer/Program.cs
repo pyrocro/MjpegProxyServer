@@ -45,7 +45,7 @@ namespace MjpegProxyServer
             var mjpeg_url = Environment.GetEnvironmentVariable("MJPEG_URL");
             Console.WriteLine("mjpeg_url url: " + mjpeg_url);
             if (string.IsNullOrEmpty(mjpeg_url)){ 
-                mjpeg_url = "http://ymc.redirectme.com/turtlecam";
+                mjpeg_url = "https://f6f56ea4.ngrok.io";
             } 
             streamManager.addStream("TurtleCam",mjpeg_url);// "http://ymc.noip.me/turtlecam");
             //var api = new MjpegWebSocketServer();
