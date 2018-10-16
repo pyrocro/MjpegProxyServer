@@ -75,10 +75,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="bin\Debug\MjpegProxyServer.exe.config" />
-    <None Include="bin\Debug\MjpegProxyServer.vshost.exe.config" />
-    <None Include="bin\Debug\MjpegProxyServer.vshost.exe.manifest" />
-    <None Include="bin\Release\MjpegProxyServer.exe.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -87,28 +83,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="bin\Debug\AForge.dll" />
-    <Content Include="bin\Debug\AForge.Video.dll" />
-    <Content Include="bin\Debug\AForge.Video.xml" />
-    <Content Include="bin\Debug\AForge.xml" />
-    <Content Include="bin\Debug\MjpegProxyServer.exe" />
-    <Content Include="bin\Debug\MjpegProxyServer.pdb" />
-    <Content Include="bin\Debug\MjpegProxyServer.vshost.exe" />
-    <Content Include="bin\Debug\Newtonsoft.Json.dll" />
-    <Content Include="bin\Debug\Newtonsoft.Json.xml" />
-    <Content Include="bin\Debug\websocket-sharp.dll" />
-    <Content Include="bin\Debug\websocket-sharp.xml" />
-    <Content Include="bin\Release\AForge.dll" />
-    <Content Include="bin\Release\AForge.Video.dll" />
-    <Content Include="bin\Release\AForge.Video.xml" />
-    <Content Include="bin\Release\AForge.xml" />
-    <Content Include="bin\Release\MjpegProxyServer.exe" />
-    <Content Include="bin\Release\Newtonsoft.Json.dll" />
-    <Content Include="bin\Release\Newtonsoft.Json.xml" />
-    <Content Include="bin\Release\websocket-sharp.dll" />
-    <Content Include="bin\Release\websocket-sharp.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -39,12 +39,13 @@ namespace MjpegProxyServer
 
 		static void WebSocketSharpStart()
 		{
+            
             WebSocketServer server = new WebSocketServer(6021);
             MjpegStreamManager streamManager = new MjpegStreamManager();
             var mjpeg_url = Environment.GetEnvironmentVariable("MJPEG_URL");
-            Console.WriteLine("mjpeg_url url: "+mjpeg_url);
-            if (string.IsNullOrEmpty(mjpeg_url)){
-                mjpeg_url = "http://ymc.redirectme.com/turtlecam"
+            Console.WriteLine("mjpeg_url url: " + mjpeg_url);
+            if (string.IsNullOrEmpty(mjpeg_url)){ 
+                mjpeg_url = "http://ymc.redirectme.com/turtlecam";
             } 
             streamManager.addStream("TurtleCam",mjpeg_url);// "http://ymc.noip.me/turtlecam");
             //var api = new MjpegWebSocketServer();

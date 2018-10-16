@@ -19,6 +19,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6A125325-3567-44C4-A440-47F563F27F97}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{6A125325-3567-44C4-A440-47F563F27F97}.Debug|Any CPU.Build.0 = Debug|x86
 		{6A125325-3567-44C4-A440-47F563F27F97}.Debug|x86.ActiveCfg = Debug|x86
 		{6A125325-3567-44C4-A440-47F563F27F97}.Debug|x86.Build.0 = Debug|x86
 		{6A125325-3567-44C4-A440-47F563F27F97}.Release|Any CPU.ActiveCfg = Release|x86
@@ -27,5 +28,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C109EA8-C047-4ACA-BEC4-8270E00C1F59}
 	EndGlobalSection
 EndGlobal
