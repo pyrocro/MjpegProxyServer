@@ -17,6 +17,19 @@ namespace MjpegProxyServer
             MjpegStream stream = new MjpegStream(url);
             streamList.Add(name, stream);
         }
+        public void removeStream(string name)
+        {
+            var stream = getMjpegStream(name);
+            stream.stop();
+            streamList.Remove(name);
+        }
+        private MjpegStream getMjpegStream(string name)
+        {
+            MjpegStream stream = null;
+            stream = streamList[name];
+            return stream;
+        }
+
         public MjpegStream getMjpegStream(string name, MjpegWebSocketBehavior msb)
         {
             MjpegStream stream = null;

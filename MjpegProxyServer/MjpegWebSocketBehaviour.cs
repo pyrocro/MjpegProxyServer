@@ -58,6 +58,14 @@ namespace MjpegProxyServer
                 case "get_mjpeg_stream":
                     
                     break;
+                case "add_stream":
+                    mjpegStreamManager.addStream(request.clientData["stream_name"].ToString(), request.clientData["stream_url"].ToString());
+                    break;
+                case "remove_stream":
+                    string stream_name = request.clientData["stream_name"].ToString();
+                    mjpegStreamManager.removeStream(stream_name);
+                    request.serverData.Add("text_message", stream_name+" was Stream Deleted");
+                    break;
 				
 
 			}
