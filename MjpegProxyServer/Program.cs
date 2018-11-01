@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using WebSocketSharp.Server;
 
@@ -35,7 +36,24 @@ namespace MjpegProxyServer
 		{
 			Console.WriteLine(message);
 		}*/
+        static void readConfig(MjpegStreamManager msm)
+        {
+            if (msm == null) return;
+            int counter = 0;
+            string line = null;
+            System.IO.StreamReader file = new System.IO.StreamReader(@"streams.conf");
+            System.Console.WriteLine("Loading streams.conf......");
+            while ((line = file.ReadLine()) != null)
+            {
+                string[] words = line.Split(' ');                
+                msm.addStream(words[0], words[1]);
+                System.Console.WriteLine(line);
+                counter++;
+            }
 
+            file.Close();
+            System.Console.WriteLine("There were {0} lines.", counter);
+        }
 
 		static void WebSocketSharpStart()
 		{
@@ -44,11 +62,28 @@ namespace MjpegProxyServer
             MjpegStreamManager streamManager = new MjpegStreamManager();
             var mjpeg_url = Environment.GetEnvironmentVariable("MJPEG_URL");
             Console.WriteLine("mjpeg_url url: " + mjpeg_url);
-            if (string.IsNullOrEmpty(mjpeg_url)){
-                mjpeg_url = "https://f6f56ea4.ngrok.io";
-            } 
-            streamManager.addStream("TurtleCam",mjpeg_url);// "http://ymc.noip.me/turtlecam");
-            streamManager.addStream("rp_1", "http://192.168.2.100:8081");
+            //Load Config file 
+            var confFileExist = File.Exists("streams.conf");
+            Console.WriteLine(confFileExist ? "streams.conf File exists." : "streams.conf File does not exist.");
+            if (confFileExist)
+            {
+                readConfig(streamManager);
+            }
+            
+            if (string.IsNullOrEmpty(mjpeg_url))
+            {
+                mjpeg_url = "http://dd191c72.ngrok.io";
+            }
+            streamManager.addStream("TurtleCam", mjpeg_url);// "http://ymc.noip.me/turtlecam");
+            /*streamManager.addStream("rp_1", "http://192.168.2.100:8081");
+            streamManager.addStream("rp_2", "http://192.168.2.108:8081");
+            streamManager.addStream("rp_3", "http://200.36.58.250/mjpg/video.mjpg?resolution=640x480");
+            streamManager.addStream("rp_4", "http://200.36.58.250/mjpg/video.mjpg?resolution=640x480");
+            streamManager.addStream("rp_5", "http://200.36.58.250/mjpg/video.mjpg?resolution=640x480");*/
+
+            
+
+            
             //var api = new MjpegWebSocketServer();
             server.AddWebSocketService<MjpegWebSocketBehavior>("/api", () => new MjpegWebSocketBehavior(streamManager));
 

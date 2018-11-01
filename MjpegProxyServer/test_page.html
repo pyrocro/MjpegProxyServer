@@ -1,0 +1,274 @@
+﻿<head>
+    <script src="jquery.min.js"></script>
+    <script src="qrcode.min.js"></script>
+
+</head>
+
+<script type="text/javascript">
+    function request() {
+        this.isDone = false;
+        this.clientData = {};
+        this.serverData = {};
+        this.command = "";
+        this.ipAddress = "";
+        this.uniqueId = "";
+    }
+
+    class MjpegStreamUnit {
+        addStream(stream_name, stream_url) {
+            // Web Socket is connected, send data using send()
+            var r = new request();
+            r.clientData = { stream_name: stream_name };
+            r.clientData = { stream_url: stream_url };
+            r.command = "add_stream";
+            var msg = JSON.stringify(r);
+            //alert(msg);
+            ws.send(msg);
+            //alert("Message is sent...");
+        }
+        removeStream(stream_name) {
+            // Web Socket is connected, send data using send()
+            var r = new request();
+            r.clientData = { stream_name: stream_name };
+            r.command = "remove_stream";
+            var msg = JSON.stringify(r);
+            //alert(msg);
+            ws.send(msg);
+            //alert("Message is sent...");
+        }
+        start(mjpeg_stream_name, image_ele_name) {
+            var frameCount = 0;
+            function calClientFps() {
+                jQuery(".stream_info .client_fps").html("Client FPS: " + frameCount);
+                //console.log(frameCount);
+                frameCount = 0;
+            }
+            setInterval(calClientFps, 1000);
+
+
+
+            if ("WebSocket" in window) {
+                //alert("WebSocket is supported by your Browser!");
+
+                // Let us open a web socket
+                var ws = new WebSocket("ws://localhost:6021/api");
+                //var ws = new WebSocket("ws://localhost:6021/api");
+                //var ws = new WebSocket("ws://10.0.0.116:6022/api");
+                //var ws = new WebSocket("ws://52.22.89.230:6021/api"); //aws linux server
+                //var ws = new WebSocket("ws://52.87.91.175:6021/api");
+
+                ws.onopen = function () {
+                    // Web Socket is connected, send data using send()
+                    var r = new request();
+                    r.clientData = { stream_name: "rp_1" };
+                    r.command = "ready";
+                    var msg = JSON.stringify(r);
+                    //alert(msg);
+                    ws.send(msg);
+                    //alert("Message is sent...");
+                };
+
+                ws.onmessage = function (evt) {
+                    var received_msg = evt.data;
+                    var serverData = JSON.parse(evt.data).serverData;
+                    //console.log(JSON.parse(received_msg).command)
+                    switch (JSON.parse(received_msg).command) {
+                        case "ready":
+                            var ele = document.getElementById("show_response");
+                            var ele_image = document.getElementById(image_ele_name);
+                            //ele.innerHTML  = JSON.parse(evt.data).serverData.image;
+                            ele_image.src = serverData.image;
+                            frameCount++;
+                            var r = new request();
+                            r.clientData = { stream_name: mjpeg_stream_name };
+                            r.command = "ready";
+                            //console.log(r);
+                            ws.send(JSON.stringify(r));
+
+                            jQuery("#" + image_ele_name + " .stream_info #" + image_ele_name + " .server_fps").html("Server FPS: " + serverData.ServerStreamFPS)
+                            jQuery("#" + image_ele_name + " .stream_info #" + image_ele_name + " .server_buffered_frames").html("Server Buffered Frames: " + serverData.ServerBufferedFrames)
+                            break;
+                        case "add_stream":
+                            break;
+                        case "remove_stream":
+                            break;
+                        default:
+                            break;
+
+                    }
+                    //alert("Message is received...");
+                };
+
+                ws.onclose = function () {
+                    // websocket is closed.
+                    //alert("Connection is closed...");
+                };
+            }
+            else {
+                // The browser doesn't support WebSocket
+                alert("WebSocket NOT supported by your Browser!");
+            }
+        };
+    }
+
+    jQuery(document).ready(function () {
+        rasp_1 = new MjpegStreamUnit()
+        rasp_2 = new MjpegStreamUnit()
+        rasp_3 = new MjpegStreamUnit()
+        rasp_4 = new MjpegStreamUnit()
+        apt_cam = new MjpegStreamUnit()
+        rnd_cam = new MjpegStreamUnit()
+        //rnd_cam.removeStream("rnd_cam")
+        //rnd_cam.addStream(rnd_cam,"http://200.36.58.250/mjpg/video.mjpg?resolution=640x480")
+        rnd_cam.start("TurtleCam", "show_image")
+        rasp_1.start("rp_1", "show_image_rp1")
+        rasp_2.start("rp_2", "show_image_rp2")
+        rasp_3.start("rp_3", "show_image_rp3")
+        rasp_4.start("rp_4", "show_image_rp4")
+        rasp_4.start("rp_5", "show_image_rp5")
+        //apt_cam.start("TurtleCam", "show_image_2")
+
+    });
+
+</script>
+<style>
+    .hero-bkg-animated {
+        background: gray url(geometry2.png) repeat 0 0;
+        width: 100%;
+        margin: 0;
+        /*text-align: center;*/
+        height: 100%;
+        /*padding-top: 120px;*/
+        box-sizing: border-box;
+        -webkit-animation: slide 20s linear infinite;
+        float: left;
+    }
+
+        .hero-bkg-animated h1 {
+            font-family: sans-serif;
+        }
+
+    @-webkit-keyframes slide {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: -400px 0;
+        }
+    }
+</style>
+
+
+<style>
+    .stream_info {
+        visibility: hidden;
+    }
+
+    .stream_container {
+    }
+
+    .stream_container_inner {
+        overflow: hidden;
+    }
+
+    #video_container_outer {
+        margin: 200px auto;
+        width: 98%;
+        /*min-height:680px;*/
+    }
+
+
+
+        #video_container_outer .vunit_outer {
+            float: left;
+            width: 46%;
+            margin-left: 30px;
+            margin-bottom: 10px;
+            max-height: 640px;
+            -webkit-box-shadow: 5px 5px 5px 0px rgba(224,224,224,1);
+            -moz-box-shadow: 5px 5px 5px 0px rgba(224,224,224,1);
+            box-shadow: 5px 5px 5px 0px rgba(224,224,224,1);
+        }
+
+            #video_container_outer .vunit_outer img {
+                width: 100%;
+                height: 100%;
+            }
+    /*#video_banner{
+        width: 100%;
+        height: 200px;
+        background-color:#ccccff;
+    }*/
+</style>
+<div class="hero-bkg-animated ">
+    <div id="video_banner">
+    </div>
+    <div id="video_container_outer">
+        <div class="vunit_outer">
+            <div class="vunit_inner">
+                <img id="show_image" src="" />
+                <div class='name'></div>
+            </div>
+        </div>
+        <div class="vunit_outer">
+            <div class="vunit_inner">
+                <img id="show_image_rp1" src="" />
+            </div>
+        </div>
+        <!--<div class="vunit_outer">
+            <div class="vunit_inner">
+                <img id="show_image_rp2" src="" />
+            </div>
+        </div>
+        <div class="vunit_outer">
+            <div class="vunit_inner">
+                <img id="show_image_rp3" src="" />
+            </div>
+        </div>
+        <div class="vunit_outer">
+            <div class="vunit_inner">
+                <img id="show_image_rp4" src="" />
+            </div>
+        </div>
+
+        <div class="vunit_outer">
+            <div class="vunit_inner">
+                <img id="show_image_rp5" src="" />
+            </div>
+        </div>-->
+        <div class="clearfix"></div>
+    </div>
+    <!--<img src="distance_displacement_sound.jpg" />-->
+    <div id="test"></div>
+</div>
+
+
+<script>
+/*$(document).ready(function(){
+        /*var qrcode = new QRCode("test", {
+            text: "http://jindo.dev.naver.com/collie",
+            width: 128,
+            height: 128,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });*/
+
+
+
+
+        /*var counter = 0;
+        var i = setInterval(function(){
+        // do your thing
+        $("#video_container_outer").fadeToggle(500,function(){
+
+        });
+        counter++;
+        if(counter === 10) {
+            clearInterval(i);
+        }
+}, 2000);
+});*/
+
+</script>

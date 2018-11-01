@@ -27,7 +27,7 @@ namespace MjpegProxyServer
         /// <summary>
         /// The max images in queue.
         /// </summary>
-        public const int MAX_IMAGES_IN_QUEUE = 15;
+        public const int MAX_IMAGES_IN_QUEUE = 1;
 
 		/// <summary>
 		/// The image queue.
