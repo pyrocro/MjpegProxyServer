@@ -14,7 +14,7 @@ namespace MjpegProxyServer
         }
         public void addStream(string name, string url)
         {
-            MjpegStream stream = new MjpegStream(url);
+            MjpegStream stream = new MjpegStream(url);            
             streamList.Add(name, stream);
         }
         public void removeStream(string name)

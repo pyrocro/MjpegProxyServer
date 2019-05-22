@@ -11,9 +11,13 @@ namespace MjpegProxyServer
 {
     public class MjpegStream
     {
+        static float bSpeed = 2;
+        float bX = 0, bY = 0;
+        float bXV = bSpeed, bYV = bSpeed;
+        
         public Dictionary<string, MjpegWebSocketBehavior> connectionList = new Dictionary<string, MjpegWebSocketBehavior>();
         bool running = false;
-        public bool RUNNING { get { return running; } }        
+        public bool RUNNING { get { return running; } }
         
         public bool hasClients()
         {
@@ -68,7 +72,7 @@ namespace MjpegProxyServer
 		public FrameData currentImage{
 			get
 			{
-				if (imageQueue.Count == 0) return new FrameData(new Bitmap(640,480));
+                if (imageQueue.Count == 0) return new FrameData(bouncingBall(new Bitmap(640, 480)));//new FrameData(new Bitmap(640,480));
                 FrameData peek = null;
                 lock (imageQueue)
                 {
@@ -77,13 +81,48 @@ namespace MjpegProxyServer
                 return peek;//imageQueue.Dequeue().ToString();
 			}
 		}
+        public Bitmap bouncingBall(Bitmap bmp)
+        {            
+            int bDiameter = 20;
+            float bRadius = bDiameter / 2;
+            Graphics g = Graphics.FromImage(bmp);
+            Pen pen = new Pen(Color.Red);
+            Brush brush = new SolidBrush(Color.Red);
+            bX += bXV; //move on x Axsis
+            bY += bYV; //move on y Axsis
+            if(bX > bmp.Width- bRadius)
+            {
+                bX = bmp.Width - bRadius;
+                bXV = - bSpeed;
+            }
+            if(bX < 0+ bRadius)
+            {
+                bX = bRadius;
+                bXV = bSpeed;
+            }
+            if(bY > bmp.Height - bRadius)
+            {
+                bY = bmp.Height - bRadius;
+                bYV = -bSpeed;
+            }
+            if (bY < 0 + bRadius)
+            {
+                bY = bRadius;
+                bYV = bSpeed;
+            }
+            //g.FillEllipse(pen, bX, bY, bDiameter, bDiameter);
+            g.FillEllipse(brush, bX, bY, bDiameter, bDiameter);
+            g.DrawString("This stream is empty",new Font(FontFamily.GenericSansSerif,10f,FontStyle.Regular),brush,bX,bY+20);
+            g.DrawString("Stream FPS: "+this.streamFPS, new Font(FontFamily.GenericSansSerif, 10f, FontStyle.Regular), brush, bX, bY + 10);
+            g.Save();
+            return bmp;
+        }
 
 		/// <summary>
 		/// Start this instance.
 		/// </summary>
 		public void start()
-		{            
-			
+		{
 			// start the video source
 			stream.Start();
 			Console.WriteLine("Started Mjpeg Stream connection...........");

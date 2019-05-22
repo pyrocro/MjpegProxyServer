@@ -65,6 +65,8 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitmapMorph\BitmapEntity.cs" />
+    <Compile Include="BitmapMorph\BouncingBall.cs" />
     <Compile Include="FrameData.cs" />
     <Compile Include="MjpegStreamManager.cs" />
     <Compile Include="Program.cs" />
